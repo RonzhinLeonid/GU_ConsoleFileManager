@@ -63,7 +63,7 @@ namespace ConsoleMenegerUILibrary
             Console.WriteLine("│                                                                                                    │                                              │");
             Console.WriteLine("│                                                                                                    │                                              │");
             Console.WriteLine("└────────────────────────────────────────────────────────────────────────────────────────────────────┴──────────────────────────────────────────────┘");
-
+            Console.CursorTop = 34;
         }
     }
 }

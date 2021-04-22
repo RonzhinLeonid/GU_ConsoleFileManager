@@ -11,10 +11,14 @@ namespace GU_ConsoleFileManager
     {
         static int countFiles;
         static int countHiddenFiles = 0;
+        static int countAllFolders;
         static int countSubFolders;
         static int countHiddenFolders = 0;
         long size;
         FolderTree folderTree;
+
+        public int CountFiles => countFiles;
+        public int CountAllFolders => countAllFolders;
         public SelectFolder(string path)
         {
             var dirInfo = new DirectoryInfo(path);
@@ -26,7 +30,9 @@ namespace GU_ConsoleFileManager
             GetCountFiles(dirInfo);
             GetCountSubFolders(dirInfo);
             folderTree = new FolderTree(path);
+            countAllFolders = folderTree.CountAllSubFolders;
         }
+        
         /// <summary>
         /// Вывод информации о содержимом выбранной папки
         /// </summary>
@@ -48,12 +54,13 @@ namespace GU_ConsoleFileManager
             Console.CursorLeft = cursorPosX;
             Console.WriteLine($"Общий размер содержимого:  {size}");
         }
+        
         /// <summary>
         /// Вывод в консоль структуры папок
         /// </summary>
         /// <param name="startPos">Начальная позиция вывода</param>
         /// <param name="endPos"></param>
-        public void PrintTree(int startPos, int endPos)
+        public void PrintTree(int startPos, int countString)
         {
             int cursorPosX = 1;
             int cursorPosY = 1;
@@ -68,7 +75,7 @@ namespace GU_ConsoleFileManager
                 lastNode = root.Edges[root.Edges.Count - 1].Path;
             }
 
-            int countString = endPos - startPos;
+            int endPos = startPos + countString;
             int numberString = 0;
             var stack = new Stack<Node>();
             var lvlRoot = root.Level;
@@ -120,17 +127,18 @@ namespace GU_ConsoleFileManager
                     Console.WriteLine($"{str,-100}");
                 }
         }
+        
         /// <summary>
         /// Вывод в консоль списка файлов заданной директории
         /// </summary>
         /// <param name="startPos"></param>
         /// <param name="endPos"></param>
-        public void PrintFile(int startPos, int endPos)
+        public void PrintFile(int startPos, int countString)
         {
             int cursorPosX = 1;
             int cursorPosY = 23;
             int numberString = 0;
-            int countString = endPos - startPos;
+            int endPos = startPos + countString;
             var root = folderTree.GetRoot();
             if (root == null)
             {
@@ -183,8 +191,9 @@ namespace GU_ConsoleFileManager
             }
             return Size;
         }
+       
         /// <summary>
-        /// Получение количества файлов в папке
+        /// Получение количества файлов в директории
         /// </summary>
         /// <param name="dirInfo"></param>
         /// <returns></returns>
@@ -202,8 +211,9 @@ namespace GU_ConsoleFileManager
             }
 
         }
+
         /// <summary>
-        /// Получение количества папок в папке
+        /// Получение количества папок в директории
         /// </summary>
         /// <param name="dirInfo"></param>
         /// <returns></returns>
@@ -219,9 +229,8 @@ namespace GU_ConsoleFileManager
                     countHiddenFolders++;
                 }
             }
-
         }
-        
+
         /// <summary>
         /// Получение префикса для стоки
         /// </summary>

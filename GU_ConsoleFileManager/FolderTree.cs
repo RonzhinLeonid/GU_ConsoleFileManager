@@ -9,10 +9,11 @@ namespace GU_ConsoleFileManager
 {
     class FolderTree
     {
-        private Node _root;
+        Node _root;
+        int countAllSubFolder;
+        public int CountAllSubFolders => countAllSubFolder;
         public FolderTree()
         {
-
         }
         public FolderTree(string startFolder)
         {
@@ -37,9 +38,10 @@ namespace GU_ConsoleFileManager
                 if ((info.Attributes & FileAttributes.Hidden) != FileAttributes.Hidden)
                 {
                     _root.Edges.Add(new Node(folder));
+                    countAllSubFolder++;
                 }
             }
-            ///этот кусок выделитьв рекурсия для возможности задания уровней
+            //этот кусок выделитьв рекурсия для возможности задания уровней
             foreach (var item in _root.Edges)
             {
                 folders = Directory.GetDirectories(item.Path);
@@ -49,6 +51,7 @@ namespace GU_ConsoleFileManager
                     if ((info.Attributes & FileAttributes.Hidden) != FileAttributes.Hidden)
                     {
                         item.Edges.Add(new Node(folder));
+                        countAllSubFolder++;
                     }
                 }
             }

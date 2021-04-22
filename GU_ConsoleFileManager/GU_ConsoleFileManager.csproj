@@ -43,7 +43,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Command.cs" />
+    <Compile Include="NextFilesDirectory.cs" />
+    <Compile Include="NextFoldersDirectory.cs" />
+    <Compile Include="PrevFilesDirectory.cs" />
+    <Compile Include="PrevFoldersDirectory.cs" />
     <Compile Include="FolderTree.cs" />
+    <Compile Include="MoveFolderCommand.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

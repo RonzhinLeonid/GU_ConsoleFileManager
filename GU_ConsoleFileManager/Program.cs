@@ -8,26 +8,64 @@ using ConsoleMenegerUILibrary;
 
 namespace GU_ConsoleFileManager
 {
+    
     class Program
     {
+        static string path = @"E:\Проект обучение";
+        static int startViewFolder = 0;
+        static int startViewFiles = 0;
+        static int lengthViewFolder = 20;
+        static int lengthViewFiles = 10;
+
         static void Main(string[] args)
         {
             UI.PrintConsole();
 
-            string path = @"E:\Проект обучение";
+            List<Command> commands = new List<Command>();
+            commands.Add(new MoveFolderCommand());
+            commands.Add(new NextFoldersDirectory());
+            commands.Add(new NextFilesDirectory());
+            commands.Add(new PrevFoldersDirectory());
+            commands.Add(new PrevFilesDirectory());
 
-            var selectFolder = new SelectFolder(path);
-            selectFolder.PrintInfo();
-            selectFolder.PrintTree(0, 20);
-            selectFolder.PrintTree(20, 40);
-            selectFolder.PrintTree(40, 60);
-            selectFolder.PrintTree(60, 80);
-            selectFolder.PrintTree(80, 100);
-            selectFolder.PrintFile(0, 10);
-            selectFolder.PrintFile(10, 20);
-            selectFolder.PrintFile(20, 30);
-            selectFolder.PrintFile(30, 40);
-            selectFolder.PrintFile(40, 50);
+            while (true)
+            {
+                string cmd = GetCommand();
+                List<string> parametrs = new List<string>();
+                string comand = ParseCommand(cmd, ref parametrs);
+
+                foreach (var item in commands)
+                {
+                    if (item.CanHandle(comand))
+                    {
+                        item.Parametrs = parametrs;
+                        item.StartViewFolder = startViewFolder;
+                        item.StartViewFiles = startViewFiles;
+                        item.LengthViewFolder = lengthViewFolder;
+                        item.LengthViewFiles = lengthViewFiles;
+                        item.Handle();
+                        startViewFolder = item.StartViewFolder;
+                        startViewFiles = item.StartViewFiles;
+                        lengthViewFolder = item.LengthViewFolder;
+                        lengthViewFiles = item.LengthViewFiles;
+                        break;
+                    }
+                }
+            }
+            //string path = @"E:\Проект обучение";
+
+            //var selectFolder = new SelectFolder(path);
+            //selectFolder.PrintInfo();
+            //selectFolder.PrintTree(0, 20);
+            //selectFolder.PrintTree(20, 40);
+            //selectFolder.PrintTree(40, 60);
+            //selectFolder.PrintTree(60, 80);
+            //selectFolder.PrintTree(80, 100);
+            //selectFolder.PrintFile(0, 10);
+            //selectFolder.PrintFile(10, 20);
+            //selectFolder.PrintFile(20, 30);
+            //selectFolder.PrintFile(30, 40);
+            //selectFolder.PrintFile(40, 50);
 
             //var t = new FolderTree(path);
             //var t = new FolderTree(@"E:");
@@ -37,9 +75,9 @@ namespace GU_ConsoleFileManager
 
 
             //t = new FolderTree(@"E:\Проект обучение\AutoCAD");
-            selectFolder.PrintTree(0, 20);
-            selectFolder.PrintTree(51, 70);
-            Console.WriteLine();
+            //selectFolder.PrintTree(0, 20);
+            //selectFolder.PrintTree(51, 70);
+            //Console.WriteLine();
             //var originalpos = Console.CursorTop;
 
             //var k = Console.ReadKey();
@@ -65,52 +103,32 @@ namespace GU_ConsoleFileManager
             Console.ReadKey();
         }
         /// <summary>
-        /// Получение размера папки
+        /// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         /// </summary>
-        /// <param name="d"></param>
+        /// <param name="cmd"></param>
+        /// <param name="parametrs"></param>
         /// <returns></returns>
-        //public static long DirSize(DirectoryInfo d)
-        //{
-        //    long Size = 0;
-        //    // Добавить размеры файлов.
-        //    FileInfo[] fis = d.GetFiles();
-        //    foreach (FileInfo fi in fis)
-        //    {
-        //        Size += fi.Length;
-        //    }
-        //    // Добавьте размеры подкаталогов.
-        //    DirectoryInfo[] dis = d.GetDirectories();
-        //    foreach (DirectoryInfo di in dis)
-        //    {
-        //        Size += DirSize(di);
-        //    }
-        //    return (Size);
-        //}
+        private static string ParseCommand(string cmd, ref List<string> parametrs)
+        {
+            var temp = cmd.Split(' ');
+            for (int i = 1; i < temp.Length; i++)
+            {
+                parametrs.Add(temp[i]);
+            }
+            return temp[0];
+        }
 
-
-
-
-
-        //static void GetRecursFiles(string start_path, int level, ref int lvl)
-        //{
-        //    lvl++;
-        //    string[] folders = Directory.GetDirectories(start_path);
-        //    foreach (string folder in folders)
-        //    {
-        //        DirectoryInfo info = new DirectoryInfo(folder);
-        //        if ((info.Attributes & FileAttributes.Hidden) != FileAttributes.Hidden)
-        //        {
-        //            Console.WriteLine("Папка: " + folder + "\n");
-        //            if (lvl < level)
-        //                GetRecursFiles(folder, level, ref lvl);
-        //        }
-        //    }
-        //    lvl--;
-        //    string[] files = Directory.GetFiles(start_path);
-        //    foreach (string filename in files)
-        //    {
-        //        Console.WriteLine("Файл: " + filename + "\n");
-        //    }
-        //}
+        /// <summary>
+        /// Получить команду из консоли
+        /// </summary>
+        /// <returns></returns>
+        private static string GetCommand()
+        {
+            Console.SetCursorPosition(0, 34);
+            var cmd = Console.ReadLine();
+            Console.SetCursorPosition(0, Console.CursorTop - 1);
+            Console.Write(new String(' ', Console.BufferWidth));
+            return cmd;
+        }
     }
 }
